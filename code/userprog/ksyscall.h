@@ -2,14 +2,14 @@
  *
  * userprog/ksyscall.h
  *
- * Kernel interface for systemcalls 
+ * Kernel interface for systemcalls
  *
  * by Marcus Voelp  (c) Universitaet Karlsruhe
  *
  **************************************************************/
 
-#ifndef __USERPROG_KSYSCALL_H__ 
-#define __USERPROG_KSYSCALL_H__ 
+#ifndef __USERPROG_KSYSCALL_H__
+#define __USERPROG_KSYSCALL_H__
 
 #include "kernel.h"
 
@@ -28,7 +28,10 @@ int SysAdd(int op1, int op2)
 }
 
 
-
+void SysPrintInt(int number)
+{
+  // TODO
+}
 
 
 

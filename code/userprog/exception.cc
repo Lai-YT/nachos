@@ -67,12 +67,13 @@ ExceptionHandler(ExceptionType which)
           break;
 
         case SC_Add:
-          DEBUG(dbgSys, "Add " << kernel->machine->ReadRegister(4) << " + " << kernel->machine->ReadRegister(5) << "\n");
+          DEBUG(dbgSys, "Add " << kernel->machine->ReadRegister(4)
+                        << " + " << kernel->machine->ReadRegister(5) << "\n");
 
           /* Process SysAdd Systemcall*/
           int result;
           result = SysAdd(/* int op1 */(int)kernel->machine->ReadRegister(4),
-          /* int op2 */(int)kernel->machine->ReadRegister(5));
+                          /* int op2 */(int)kernel->machine->ReadRegister(5));
 
           DEBUG(dbgSys, "Add returning with " << result << "\n");
           /* Prepare Result */
@@ -87,7 +88,29 @@ ExceptionHandler(ExceptionType which)
             kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 
             /* set next programm counter for brach execution */
-            kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+            kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+          }
+
+          return;
+
+          ASSERTNOTREACHED();
+          break;
+
+        case SC_PrintInt:
+          DEBUG(dbgSys, "PrintInt " << kernel->machine->ReadRegister(4) << "\n");
+
+          SysPrintInt(/* int number */(int)kernel->machine->ReadRegister(4));
+
+          /* Modify return point */
+          {
+            /* set previous programm counter (debugging only)*/
+            kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+            /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+            kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+
+            /* set next programm counter for brach execution */
+            kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
           }
 
           return;
@@ -100,8 +123,9 @@ ExceptionHandler(ExceptionType which)
           break;
       }
       break;
+
     default:
-      cerr << "Unexpected user mode exception" << (int)which << "\n";
+      cerr << "Unexpected user mode exception"  << (int)which << "\n";
       break;
   }
   ASSERTNOTREACHED();

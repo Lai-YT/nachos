@@ -1,10 +1,10 @@
 #include "syscall.h"
 
+
 int main (void) {
-	Print("This is a message: ");
-	PrintNum(666);
-	Print("\n");
+	// Print("This is a message: ");
+	PrintInt(666);
+	// Print("\n");
 	Halt();
 	/* not reached */
 }
-
