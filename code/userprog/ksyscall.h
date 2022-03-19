@@ -12,7 +12,7 @@
 #define __USERPROG_KSYSCALL_H__
 
 #include "kernel.h"
-
+#include "synchconsole.h"
 
 
 
@@ -30,8 +30,30 @@ int SysAdd(int op1, int op2)
 
 void SysPrintInt(int number)
 {
-  // TODO
+  /* Use recursive approach instead of loop so
+   * we don't print the digits reversely.
+   */
+
+  /* boundary condition */
+  if (number == 0) {
+    kernel->synchConsoleOut->PutChar('0');
+    return;
+  }
+
+  /* sign */
+  if (number < 0) {
+    kernel->synchConsoleOut->PutChar('-');
+    number *= -1;
+  }
+
+  /* digit by digit */
+  if (number / 10) {
+    SysPrintInt(number / 10);
+  }
+
+  kernel->synchConsoleOut->PutChar(number % 10 + '0');
 }
+
 
 
 

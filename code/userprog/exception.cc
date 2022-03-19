@@ -57,7 +57,7 @@ ExceptionHandler(ExceptionType which)
 
   switch (which) {
     case SyscallException:
-      switch(type) {
+      switch (type) {
         case SC_Halt:
           DEBUG(dbgSys, "Shutdown, initiated by user program.\n");
 
