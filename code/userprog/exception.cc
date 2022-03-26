@@ -48,6 +48,21 @@
 //  is in machine.h.
 //----------------------------------------------------------------------
 
+
+void
+ModifyReturnPoint()
+{
+  /* set previous programm counter (debugging only)*/
+  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+
+  /* set next programm counter for brach execution */
+  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+}
+
+
 void
 ExceptionHandler(ExceptionType which)
 {
@@ -79,17 +94,7 @@ ExceptionHandler(ExceptionType which)
           /* Prepare Result */
           kernel->machine->WriteRegister(2, (int)result);
 
-          /* Modify return point */
-          {
-            /* set previous programm counter (debugging only)*/
-            kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-            /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-            kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-
-            /* set next programm counter for brach execution */
-            kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
-          }
+          ModifyReturnPoint();
 
           return;
 
@@ -101,17 +106,7 @@ ExceptionHandler(ExceptionType which)
 
           SysPrintInt(/* int number */(int)kernel->machine->ReadRegister(4));
 
-          /* Modify return point */
-          {
-            /* set previous programm counter (debugging only)*/
-            kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-            /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-            kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-
-            /* set next programm counter for brach execution */
-            kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
-          }
+          ModifyReturnPoint();
 
           return;
 
@@ -125,7 +120,7 @@ ExceptionHandler(ExceptionType which)
       break;
 
     default:
-      cerr << "Unexpected user mode exception"  << (int)which << "\n";
+      cerr << "Unexpected user mode exception "  << (int)which << "\n";
       break;
   }
   ASSERTNOTREACHED();
