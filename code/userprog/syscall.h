@@ -37,6 +37,7 @@
 
 #define SC_Add  42
 #define SC_PrintInt 43
+#define SC_PrintStr 44
 
 
 #ifndef IN_ASM
@@ -61,6 +62,9 @@ int Add(int op1, int op2);
 
 /* Print the integer to the console. */
 void PrintInt(int number);
+
+/* Print the '\0' terminated char array. */
+void PrintStr(const char* str);
 
 
 /* Address space control operations: Exit, Exec, Execv, and Join */

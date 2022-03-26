@@ -66,6 +66,14 @@ PrintInt:
 	j 	$31
 	.end PrintInt
 
+  .globl PrintStr
+	.ent	PrintStr
+PrintStr:
+	addiu $2,$0,SC_PrintStr
+	syscall
+	j 	$31
+	.end PrintStr
+
 	.globl Exit
 	.ent	Exit
 Exit:
