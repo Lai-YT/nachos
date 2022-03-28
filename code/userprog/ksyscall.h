@@ -55,6 +55,13 @@ void SysPrintInt(int number)
 }
 
 
+void SysPrintStr(const char* str)
+{
+  while (*str != '\0') {
+    kernel->synchConsoleOut->PutChar(*str++);
+  }
+}
+
 
 
 #endif /* ! __USERPROG_KSYSCALL_H__ */
