@@ -113,6 +113,24 @@ ExceptionHandler(ExceptionType which)
           ASSERTNOTREACHED();
           break;
 
+        case SC_PrintStr:
+          DEBUG(dbgSys, "PrintStr called\n");
+
+          int addr;
+          addr = kernel->machine->ReadRegister(4);
+          int data;
+          while (kernel->machine->ReadMem(addr, 1, &data) && (char)data != '\0') {
+            kernel->synchConsoleOut->PutChar((char)data);
+            ++addr;
+          }
+
+          ModifyReturnPoint();
+
+          return;
+
+          ASSERTNOTREACHED();
+          break;
+
         default:
           cerr << "Unexpected system call " << type << "\n";
           break;
