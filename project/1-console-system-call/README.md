@@ -1,8 +1,11 @@
 # Project 1: Console System Call
 
 We are to implement
- - a `PrintInt` function, which outputs integers to the console, and
- - a `PrintStr` function, which outputs char array to the console.
+
+- a `PrintInt` function, which outputs integers to the console, and
+- a `PrintStr` function, which outputs char array to the console.
+
+## Steps
 
 1. Write tests: `code/test/print.c`.
 
@@ -23,7 +26,7 @@ We are to implement
 
   ```
 
-1. Add into Nachos system call interface: `code/userprog/syscall.h`.
+2. Add into Nachos system call interface: `code/userprog/syscall.h`.
 
   ```C++
   ...
@@ -40,7 +43,7 @@ We are to implement
   void PrintStr(const char* str);
   ```
 
-1. Define the console I/O system calls in assembly way: `code/test/start.S`.
+3. Define the console I/O system calls in assembly way: `code/test/start.S`.
 
   ```
   ...
@@ -62,7 +65,7 @@ We are to implement
   	.end PrintStr
   ```
 
-1. Implement the kernel system calls for `ExceptionHandler` to use: `code/userprog/ksyscall.h`.
+4. Implement the kernel system calls for `ExceptionHandler` to use: `code/userprog/ksyscall.h`.
 
   ```C++
   ...
@@ -101,7 +104,7 @@ We are to implement
   }
   ```
 
-1. Handle the exceptions raised by system call: `code/userprog/exception.cc`.
+5. Handle the exceptions raised by system call: `code/userprog/exception.cc`.
 
   ```C++
   void
