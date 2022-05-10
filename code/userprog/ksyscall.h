@@ -15,7 +15,6 @@
 #include "synchconsole.h"
 
 
-
 void SysHalt()
 {
   kernel->interrupt->Halt();
@@ -53,15 +52,6 @@ void SysPrintInt(int number)
 
   kernel->synchConsoleOut->PutChar(number % 10 + '0');
 }
-
-
-void SysPrintStr(const char* str)
-{
-  while (*str != '\0') {
-    kernel->synchConsoleOut->PutChar(*str++);
-  }
-}
-
 
 
 #endif /* ! __USERPROG_KSYSCALL_H__ */
