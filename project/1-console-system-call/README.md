@@ -95,13 +95,6 @@ We are to implement
 
     kernel->synchConsoleOut->PutChar(number % 10 + '0');
   }
-
-  void SysPrintStr(const char* str)
-  {
-    while (*str != '\0') {
-      kernel->synchConsoleOut->PutChar(*str++);
-    }
-  }
   ```
 
 5. Handle the exceptions raised by system call: `code/userprog/exception.cc`.
@@ -136,38 +129,14 @@ We are to implement
 
           case SC_PrintStr:
             DEBUG(dbgSys, "PrintStr called\n");
-            /* NOTE:
-              It's technically possible to call kernel->synchConsoleOut->PutChar
-              here in the interrupt handler, so don't have to do all these
-              allocations, but I want to consist with calling kernel syscall APIs
-              and let them do the real works.
-            */
 
-            /* get the str out from the memory */
-            {  /* new block to avoid "cross Initializtion" errors */
-
-              /* read start addr */
-              int addr = kernel->machine->ReadRegister(4);
-
-              /* have the array grow dynamically to read all the chars from memory */
-              size_t size = 0, capacity = 10;
-              /* 1 space for '\0' */
-              char* data = (char*)calloc(capacity - 1, sizeof(char));
-              for (size_t i = 0;
-                  kernel->machine->ReadMem(addr++, 1, (int*)(data + i)) && data[i] != '\0';
-                  ++i) {
-                /* dynamic allocation, 2 times bigger every growth, like a std::vector */
-                if (++size == capacity) {
-                  capacity *= 2;
-                  char* old_data = data;
-                  data = (char*)calloc(capacity - 1, sizeof(char));
-                  memcpy(data, old_data, size);
-                  free(old_data);
-                }
-              }
-              data[size + 1] = '\0';
-              SysPrintStr(data);
-              free(data);
+            int addr;
+            /* read start addr */
+            addr = kernel->machine->ReadRegister(4);
+            int data;
+            while (kernel->machine->ReadMem(addr, 1, &data) && data /* not '\0' */) {
+              kernel->synchConsoleOut->PutChar(data);
+              ++addr;
             }
 
             ModifyReturnPoint();
