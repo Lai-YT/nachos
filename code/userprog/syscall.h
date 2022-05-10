@@ -119,7 +119,7 @@ typedef int OpenFileId;
 // #define ConsoleInput	0
 // #define ConsoleOutput	1
 
-/* Create a Nachos file, with name "name" */
+/* Create a Nachos file, with name "name", the longest acceptable filename is 100 */
 /* Note: Create does not open the file.   */
 /* Return 1 on success, negative error code on failure */
 int Create(char *name);

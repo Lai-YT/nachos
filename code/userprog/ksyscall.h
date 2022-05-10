@@ -54,4 +54,29 @@ void SysPrintInt(int number)
 }
 
 
+char* SysReadFilenameFromAddress(int addr)
+{
+  DEBUG(dbgSys, "Getting filename from addr: " << addr << "\n");
+  const int MAX_LENGTH = 100;
+
+  char* filename = new char[MAX_LENGTH + 1];
+  int data = 0;
+  int pos = 0;
+  for (;pos < MAX_LENGTH && kernel->machine->ReadMem(addr + pos, 1, &data) && data; ++pos) {
+    filename[pos] = (char)data;
+  }
+
+  if (pos >= MAX_LENGTH) {
+    DEBUG(dbgSys, "filename can't be longer than " << MAX_LENGTH << "\n");
+    delete [] filename;
+    ASSERT(false);
+  }
+  
+  filename[pos] = '\0';
+  DEBUG(dbgSys, "file \"" << filename << "\" read from memory\n");
+
+  return filename;
+}
+
+
 #endif /* ! __USERPROG_KSYSCALL_H__ */

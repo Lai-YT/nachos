@@ -106,13 +106,35 @@ ExceptionHandler(ExceptionType which)
         case SC_PrintStr:
           DEBUG(dbgSys, "PrintStr called\n");
 
-          int addr;
-          /* read start addr */
-          addr = kernel->machine->ReadRegister(4);
-          int data;
-          while (kernel->machine->ReadMem(addr, 1, &data) && data /* not '\0' */) {
-            kernel->synchConsoleOut->PutChar(data);
-            ++addr;
+          {
+            /* read start addr */
+            int addr = kernel->machine->ReadRegister(4);
+            int data = 0;
+            while (kernel->machine->ReadMem(addr, 1, &data) && data /* not '\0' */) {
+              kernel->synchConsoleOut->PutChar(data);
+              ++addr;
+            }
+          }
+
+          ModifyReturnPoint();
+
+          return;
+
+          ASSERTNOTREACHED();
+          break;
+
+        case SC_Create:
+          DEBUG(dbgSys, "Create called\n");
+
+          {
+            char* filename = SysReadFilenameFromAddress(kernel->machine->ReadRegister(4));
+            DEBUG(dbgSys, "file \"" << filename << "\" returned from kernel syscall\n");
+
+            bool success = kernel->fileSystem->Create(filename);
+            DEBUG(dbgSys, "Creation of file \"" << filename << "\" "
+                          << (success ? "succeeded" : "failed") << "\n");
+            delete [] filename;
+            ASSERT(success);
           }
 
           ModifyReturnPoint();
